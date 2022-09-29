@@ -1,0 +1,63 @@
+##################################################################################################
+# Notification service
+##################################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification
+  labels:
+    app: notification
+    service: notification
+spec:
+  ports:
+    - port: 8080
+      name: http
+  selector:
+    app: notification
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: awesome-notification
+  labels:
+    account: notification
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-v1
+  labels:
+    app: notification
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: notification
+        version: v1
+    spec:
+      serviceAccountName: awesome-notification
+      containers:
+        - name: notification
+          image: gcr.io/mythic-producer-328820/notification:1.0
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: SERVER_PORT
+              value: "8080"
+            - name: MAIL_PORT
+              value: "587"
+            - name: EMAIL
+              value: "testsaproject@gmail.com"
+            - name: PASSWORD
+              value: "abcd@1234"
+            - name: KAFKA_HOSTNAME
+              value: "my-kafka.default:9092"
+            - name: CONSUMER_GROUP_ID
+              value: consumer-notification
+          ports:
+            - containerPort: 8080

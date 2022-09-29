@@ -1,0 +1,34 @@
+--------- Accounts Endpoints ------------
+/accounts/register --- POST
+/accounts/login ------ POST
+/accounts/current ---- GET
+
+--------- Restaurants Endpoints ---------
+/restaurants/{id}/menus ---- GET, POST, 
+/restaurants/{id}/menus/{id} --- PUT, DELETE
+/restaurants/{id}/orders ---- GET
+/restaurants/{id}/orders/{id} ---- PUT
+
+-------- Customer Endpoints -------------
+/customers/restaurants --- GET
+/customers/restaurants/search?restaurant=name&menu=name --- GET
+/customers/{id}/orders --- GET, POST
+
+------- Driver Endpoints --------------
+/drivers/{id}/orders ---- GET
+/drivers/{id}/orders/{id}/pick ---- POST
+/drivers/{id}/orders/{id}/deliver ---- POST
+
+
+config 
+# Eg. mogodb:27017/order
+#spring.data.mongodb.uri=mongodb+srv://root:${mongodb-root-password}@${DB_HOSTNAME}:${DB_PORT}/${DB_DATABASE}
+server.port=5000
+spring.data.mongodb.uri=mongodb+srv://root:terbinosrrot@accounts.nqdyy.mongodb.net/FinalProject?retryWrites=true&w=majority
+app.topic-name= user-topic
+
+# Custom
+#app.jwt.secret= ${JWT_SECRET}
+#app.jwt.jwtExpirationInMs=${JWT_EXPIRE}
+app.jwt.secret= FKckg7aj1rt9scui5ik5tr93d0
+app.jwt.jwtExpirationInMs=6000000

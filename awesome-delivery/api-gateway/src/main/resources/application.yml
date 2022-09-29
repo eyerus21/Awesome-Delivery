@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: API Gateway Service
+  api:
+    title: API Gateway Service
+    version: 1.0.0
+    description: API Gateway Micro Service description
+    base-package: edu.miu
+    contact-name: Terbinos
+    contact-email: tchekol@miu.edu
+server:
+  port: ${SERVER_PORT}
+
+app:
+  jwt:
+    secret: ${SECRET}
+
+accounts:
+  baseurl: ${ACCOUNTS_URL}
+  register: ${REGISTER}
+  login: ${LOGIN}
+
+restaurants:
+  baseurl: ${RESTAURANTS_URL}
+  restaurant: ${RESTAURANT}
+
+customers:
+  searchBaseurl: ${CUSTOMERS_SEARCH_URL}
+  orderBaseurl: ${CUSTOMERS_ORDER_URL}
+
+drivers:
+  baseurl: ${DRIVERS_URL}
+  driver: ${DRIVER}

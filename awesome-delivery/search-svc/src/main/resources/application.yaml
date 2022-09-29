@@ -1,0 +1,77 @@
+#server:
+#  port: ${SERVER_PORT}
+#elasticsearch:
+#  host: ${ELASTIC_HOST}
+#  port: ${ELASTIC_PORT}
+#
+#spring:
+#  kafka:
+#    consumer:
+#      bootstrap-servers: ${KAFKA_CONSUMER_SERVER}
+#      group-id: ${KAFKA_GROUP_ID}
+#      auto-offset-reset: earliest
+#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#  cache:
+#    type: redis
+#    redis:
+#      time-to-live: ${CACHE_TTL}
+#  redis:
+#    host: ${REDIS_HOST}
+#    port: ${REDIS_PORT}
+#kafka:
+#  topic:
+#    save: ${SAVE_TOPIC}
+#    delete: ${DELETE_TOPIC}
+
+#server:
+#  port: ${SERVER_PORT}
+#elasticsearch:
+#  host: ${ELASTIC_HOST}
+#  port: ${ELASTIC_PORT}
+#
+#spring:
+#  kafka:
+#    consumer:
+#      bootstrap-servers: ${KAFKA_CONSUMER_SERVER}
+#      group-id: ${KAFKA_GROUP_ID}
+#      auto-offset-reset: earliest
+#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#  cache:
+#    type: redis
+#    redis:
+#      time-to-live: ${CACHE_TTL}
+#  redis:
+#    host: ${REDIS_HOST}
+#    port: ${REDIS_PORT}
+#kafka:
+#  topic:
+#    save: ${SAVE_TOPIC}
+#    delete: ${DELETE_TOPIC}
+
+server:
+  port: 8086
+elasticsearch:
+  host: 127.0.0.1
+  port: 9200
+
+spring:
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: group1
+      auto-offset-reset: earliest
+      #key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      #value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600000
+  redis:
+    host: 127.0.0.1
+    port: 6379
+kafka:
+  topic:
+    save: save-topic
+    delete: delete-topic

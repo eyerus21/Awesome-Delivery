@@ -1,0 +1,55 @@
+##################################################################################################
+# Search service
+##################################################################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: search-svc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: search-svc
+  template:
+    metadata:
+      labels:
+        app: search-svc
+    spec:
+      containers:
+        - name: app
+          image: gcr.io/mythic-producer-328820/search-svc:1.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SERVER_PORT
+              value: "8080"
+            - name: ELASTIC_PORT
+              value: "9200"
+            - name: ELASTIC_HOST
+              value: my-es-elasticsearch-data
+            - name: KAFKA_GROUP_ID
+              value: group1
+            - name: KAFKA_CONSUMER_SERVER
+              value: my-kafka.default:9092
+            - name: SAVE_TOPIC
+              value: restaurant_saved
+            - name: DELETE_TOPIC
+              value: restaurant_deleted
+            - name: CACHE_TTL
+              value: "3600000"
+            - name: REDIS_HOST
+              value: redis
+            - name: REDIS_PORT
+              value: "6379"
+          imagePullPolicy: IfNotPresent
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: search-svc
+spec:
+  selector:
+    app: search-svc
+  ports:
+    - port: 8080
+      targetPort: 8080

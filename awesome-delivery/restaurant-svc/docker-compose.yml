@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=rootuser
+      - MONGO_INITDB_ROOT_PASSWORD=rootpass
+    volumes:
+      - mongodb-data:/data
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=rootuser
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=rootpass
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+
+#  restaurant-svc:
+#    build: .
+#    ports:
+#      - 8082:8080
+#    command: sh -c './wait-for-it.sh mysql:3306 -- mvn spring-boot:run'
+
+
+volumes:
+  mongodb-data:
+    driver: local
+networks:
+  default:
+    name: mongo-express-network
+
+
+#  mongo nongodb://localhost/27017 -u rootuser -p rootpass

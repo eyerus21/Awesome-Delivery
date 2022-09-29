@@ -1,0 +1,77 @@
+##################################################################################################
+# Order service
+##################################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: order
+  labels:
+    app: order
+    service: order
+spec:
+  ports:
+    - port: 8080
+      name: http
+  selector:
+    app: order
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: awesome-order
+  labels:
+    account: order
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-v1
+  labels:
+    app: order
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: order
+        version: v1
+    spec:
+      serviceAccountName: awesome-order
+      containers:
+        - name: order
+          image: gcr.io/mythic-producer-328820/order:1.0
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: DB_HOSTNAME
+              value: "order-mongodb.default"
+            - name: DB_PORT
+              value: "27017"
+            - name: DB_DATABASE
+              value: "order"
+            - name: DB_USER
+              value: "order"
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: order-mongodb
+                  key: mongodb-password
+            - name: KAFKA_HOSTNAME
+              value: "my-kafka.default:9092"
+            - name: RABBITMQ_HOSTNAME
+              value: "my-rabbitmq.default"
+            - name: RABBITMQ_USER
+              value: "user"
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: my-rabbitmq
+                  key: rabbitmq-password
+          ports:
+            - containerPort: 8080
+---
+

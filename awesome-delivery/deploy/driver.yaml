@@ -1,0 +1,68 @@
+##################################################################################################
+# Driver service
+##################################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: driver
+  labels:
+    app: driver
+    service: driver
+spec:
+  ports:
+    - port: 8080
+      name: http
+  selector:
+    app: driver
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: awesome-driver
+  labels:
+    account: driver
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: driver-v1
+  labels:
+    app: driver
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: driver
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: driver
+        version: v1
+    spec:
+      serviceAccountName: awesome-driver
+      containers:
+        - name: driver
+          image: gcr.io/mythic-producer-328820/driver:1.1
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: DB_HOSTNAME
+              value: "driver-mongodb.default"
+            - name: DB_PORT
+              value: "27017"
+            - name: DB_DATABASE
+              value: "driver"
+            - name: DB_USER
+              value: "driver"
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: driver-mongodb
+                  key: mongodb-password
+            - name: KAFKA_HOSTNAME
+              value: "my-kafka.default:9092"
+          ports:
+            - containerPort: 8080
+---
+

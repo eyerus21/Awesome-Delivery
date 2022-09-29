@@ -1,0 +1,61 @@
+
+.login {
+  position: relative;
+  background: url('./assets/img/delivery.jpeg') no-repeat;
+  background-size: cover;
+  background-position: center;
+  height: 95.3vh;
+  margin-top: 0px;
+}
+
+.register {
+  position: relative;
+  background: url('./assets/img/delivery.jpeg') no-repeat;
+  background-size: cover;
+  background-position: center;
+  height: 120.3vh;
+  margin-top: 0px;
+}
+
+.login-inner {
+  padding-top: 120px;
+}
+
+.register-inner {
+  padding-top: 20px;
+  height: 120.3vh;
+}
+
+
+#components-layout-demo-top-side-2 .logo {
+  float: left;
+  width: 120px;
+  height: 31px;
+  margin: 16px 24px 16px 0;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.ant-row-rtl #components-layout-demo-top-side-2 .logo {
+  float: right;
+  margin: 16px 0 16px 24px;
+}
+
+.site-layout-background {
+  background: #fff;
+}
+
+.landing {
+  position: relative;
+  background: url('./assets/img/delivery.jpeg') no-repeat;
+  background-size: cover;
+  background-position: center;
+  height: 95.3vh;
+  margin-top: 0px;
+  /* margin-bottom: -50px; */
+}
+
+.ant-divider-horizontal.ant-divider-with-text-center::before,
+.ant-divider-horizontal.ant-divider-with-text-center::after
+{
+   border-top: 1px solid white;
+}

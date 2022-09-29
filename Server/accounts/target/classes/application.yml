@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: Accounts Service
+  api:
+    title: Accounts Micro Service
+    version: 1.0.0
+    description: Accounts Micro Service description
+    base-package: edu.miu
+    contact-name: Terbinos
+    contact-email: tchekol@miu.edu
+  data:
+    mongodb:
+      uri: mongodb+srv://root:terbinosrrot@accounts.nqdyy.mongodb.net/FinalProject?retryWrites=true&w=majority
+server:
+  port: 5000
+jwt:
+  expiry: 6000000
+  secret: FKckg7aj1rt9scui5ik5tr93d0

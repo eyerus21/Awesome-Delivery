@@ -1,0 +1,82 @@
+##################################################################################################
+# User service
+##################################################################################################
+apiVersion: v1
+kind: Secret
+metadata:
+  name: user-secret
+  labels:
+    name: user
+type: Opaque
+stringData:
+  JWT_SECRET: lJK4LjppNRRKhnr42vDzr5wfibracq5BVcW0dzeB6Mk
+  JWT_EXPIRE: "604800000"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user
+  labels:
+    app: user
+    service: user
+spec:
+  ports:
+    - port: 8080
+      name: http
+  selector:
+    app: user
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: awesome-user
+  labels:
+    account: user
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-v1
+  labels:
+    app: user
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: user
+        version: v1
+    spec:
+      serviceAccountName: awesome-user
+      containers:
+        - name: user
+          image: gcr.io/mythic-producer-328820/user:1.0
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+                name: user-secret
+          env:
+            - name: DB_HOSTNAME
+              value: "user-mongodb.default"
+            - name: DB_PORT
+              value: "27017"
+            - name: DB_DATABASE
+              value: "user"
+            - name: DB_USER
+              value: "user"
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: user-mongodb
+                  key: mongodb-password
+            - name: KAFKA_HOSTNAME
+              value: "my-kafka.default:9092"
+          ports:
+            - containerPort: 8080
+---
+

@@ -1,0 +1,62 @@
+##################################################################################################
+# Payment service
+##################################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment
+  labels:
+    app: payment
+    service: payment
+spec:
+  ports:
+    - port: 8080
+      name: http
+  selector:
+    app: payment
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: awesome-payment
+  labels:
+    account: payment
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-v1
+  labels:
+    app: payment
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: payment
+        version: v1
+    spec:
+      serviceAccountName: awesome-payment
+      containers:
+        - name: payment
+          image: gcr.io/mythic-producer-328820/payment:1.0
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: RABBITMQ_HOSTNAME
+              value: "my-rabbitmq.default"
+            - name: RABBITMQ_USER
+              value: "user"
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: my-rabbitmq
+                  key: rabbitmq-password
+          ports:
+            - containerPort: 8080
+---
+

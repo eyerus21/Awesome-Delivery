@@ -1,0 +1,72 @@
+##################################################################################################
+# Restaurant service
+##################################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: restaurant
+  labels:
+    app: restaurant
+    service: restaurant
+spec:
+  ports:
+    - port: 8080
+      name: http
+  selector:
+    app: order
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: awesome-restaurant
+  labels:
+    account: restaurant
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: restaurant-v1
+  labels:
+    app: restaurant
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: restaurant
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: restaurant
+        version: v1
+    spec:
+      serviceAccountName: awesome-restaurant
+      containers:
+        - name: restaurant
+          image: gcr.io/mythic-producer-328820/restaurant-svc:1.1
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: DB_HOSTNAME
+              value: "restaurant-mongodb.default"
+            - name: DB_PORT
+              value: "27017"
+            - name: DB_DATABASE
+              value: "restaurant"
+            - name: KAFKA_HOSTNAME
+              value: "my-kafka.default:9092 "
+            - name: SERVER_PORT
+              value: "8080"
+            - name: GROUP_ID
+              value: "group_id"
+            - name: TOPIC_NAME
+              value: "order-topic"
+            - name: DB_USER
+              value: "restaurant"
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: restaurant-mongodb
+                  key: mongodb-password
+          ports:
+            - containerPort: 8080

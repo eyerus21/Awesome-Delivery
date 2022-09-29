@@ -1,0 +1,84 @@
+##################################################################################################
+# API Gateway
+##################################################################################################
+apiVersion: v1
+kind: Secret
+metadata:
+  name: apigateway-secret
+  labels:
+    name: user
+type: Opaque
+stringData:
+  SECRET: lJK4LjppNRRKhnr42vDzr5wfibracq5BVcW0dzeB6Mk
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-gateway
+  labels:
+    app: api-gateway
+    service: api-gateway
+spec:
+  ports:
+    - port: 8080
+      name: http
+  selector:
+    app: api-gateway
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: awesome-api-gateway
+  labels:
+    account: api-gateway
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway-v1
+  labels:
+    app: api-gateway
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+        version: v1
+    spec:
+      serviceAccountName: awesome-api-gateway
+      containers:
+        - name: api-gateway
+          image: gcr.io/mythic-producer-328820/api-gateway:1.0
+        envFrom:
+          - secretRef:
+              name: apigateway-secret
+        env:
+          - name: SERVER_PORT
+            value: "8080"
+          - name: ACCOUNTS_URL
+            value: "http://user.default/"
+          - name: REGISTER
+            value: "auth/signup"
+          - name: LOGIN
+              value: "auth/signin"
+          - name: RESTAURANTS_URL
+            value: "http://restaurant.default/"
+          - name: RESTAURANT
+            value: "restaurants"
+          - name: CUSTOMERS_URL
+            value: "http://customer.default/"
+          - name: CUSTOMER
+            value: "customers"
+          - name: DRIVERS_URL
+            value: "http://driver.default/"
+          - name: DRIVER
+            value: "drivers"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
